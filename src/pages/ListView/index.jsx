@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { getAllProducts, setAllProducts } from "../../localstorage";
 
 import Table from "../../components/table";
 import Button from "../../components/button";
@@ -12,35 +11,67 @@ function ListView() {
     const [data, setData] = useState([]);
 
     useEffect(()=>{
-        getAllProducts().then(d=>{
-            setData(d)
+        var requestOptions = {
+            method: 'GET',
+            redirect: 'follow'
+        };
+
+        fetch(`${import.meta.env.VITE_API_BASE_URL}`, requestOptions)
+        .then(response => {
+            if(response.status === 200){
+               return response.json()
+            }
+        }).then(data => {
+            setData(data)
         })
+        .catch(error => console.log('error', error));
     },[])
 
-    useEffect(()=>{
-        setAllProducts(data)
-    },[data])
-
+    console.log(data)
 
     function handleAddButtonClick(){
         setShowModal(true)
     }
 
     function handleProductData(values, setSubmitting){
-        console.log(values)
-        
-        setData([
-            ...data,
-            values
-        ])
-        setSubmitting(false)
-        setShowModal(false)
+
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var requestOptions = {
+            method: 'PUT',
+            headers: myHeaders,
+            body: values,
+            redirect: 'follow'
+        };
+
+        fetch(import.meta.env.VITE_API_BASE_URL, requestOptions)
+        .then(response => {
+            if(response.status === 200){
+                // To-Do: remove reload
+                window.location.reload()
+            }
+        })
+        .catch(error => console.log('error', error));
     }
 
-    function handleDelete(index){
-        console.log(index)
-        data.splice(index, 1)
-        setData([...data])
+    function handleDelete(item){
+        const myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+
+        var requestOptions = {
+            method: 'DELETE',
+            redirect: 'follow'
+        };
+
+        fetch(`${import.meta.env.VITE_API_BASE_URL}/${item.id}`, requestOptions)
+        .then(response => {
+            if(response.status === 200){
+                // To-Do: remove reload
+                window.location.reload()
+            }
+        })
+        .catch(error => console.log('error', error));
     }
 
     return (

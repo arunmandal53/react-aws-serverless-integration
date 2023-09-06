@@ -27,12 +27,12 @@ function Table(props) {
                                 <td className="p-2 border">{item.product_name}</td>
                                 <td className="p-2 border">{item.description}</td>
                                 <td className="p-2 border">{item.price}</td>
-                                <td className="p-2 border"><img className="w-32 h-32 object-cover" src={URL.createObjectURL(item.image, {type: "image/png"})}/></td>
+                                <td className="p-2 border"><img className="w-32 h-32 object-cover" src={item.image}/></td>
                                 <td className="p-2 border">
                                     <div className="flex gap-2 justify-center">
                                         {/* <img className='h-8 w-8 cursor-pointer' src={ViewIcon} title='View'/>
                                         <img className='h-8 w-8 cursor-pointer' src={EditIcon} title='Edit'/> */}
-                                        <img className='h-8 w-8 cursor-pointer' onClick={()=>handleDelete(index)} src={DeleteIcon} title='Delete'/>
+                                        <img className='h-8 w-8 cursor-pointer' onClick={()=>handleDelete(item)} src={DeleteIcon} title='Delete'/>
                                     </div>
                                 </td>
                             </tr>

@@ -7,7 +7,7 @@ import { useRef } from 'react';
         handleProductData
     } = props;
 
-    const blob = useRef(null);
+    const image_uri = useRef(null);
 
     return (
         <div className='flex flex-col gap-6 flex-grow'>
@@ -24,14 +24,10 @@ import { useRef } from 'react';
                 if (!values.price) {
                     errors.price = 'Price is required.';
                 }
-                if (!blob) {
-                    errors.image = 'Image file is required.';
-                    // To-Do: We will need to validate file MIME Type with required formats
-                }
                 return errors;
             }}
             onSubmit={(values, { setSubmitting }) => {
-                values.image = blob.current
+                values.image = image_uri.current
                 handleProductData(values, setSubmitting)
             }}
             validateOnChange={false}
@@ -107,16 +103,16 @@ import { useRef } from 'react';
                                 onChange={(e)=>{
                                     const fr = new FileReader()
                                     const file = e.target.files[0]
-                                    fr.readAsArrayBuffer(file)
-                                    fr.onload = function() {
-                                        blob.current = new Blob([fr.result])
+                                    fr.readAsDataURL(file)
+                                    fr.onloadend = function() {
+                                        image_uri.current = fr.result
                                     }
                                     handleChange(e)
                                 }}
                                 onBlur={handleBlur}
                                 value={values.image}
                                 autoComplete='off'
-                                accept="image/*"
+                                accept="image/png"
                             />
                             <p className=' text-red-600'>
                                 {errors.image && touched.image && errors.image}
